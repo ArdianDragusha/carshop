@@ -1,21 +1,23 @@
 # Simple workflow for deploying static content to GitHub Pages
 name: Deploy static content to Pages
-
+ 
 on:
   push:
     branches: ['main']
-
+ 
   workflow_dispatch:
-
+ 
 # Sets the GITHUB_TOKEN permissions to allow deployment to GitHub Pages
 permissions:
   contents: read
   pages: write
   id-token: write
-
+ 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages # Tämä lisätty
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -24,25 +26,24 @@ jobs:
         with:
           node-version: lts/*
           cache: 'npm'
-
+ 
       # Remove lockfile to fix issue https://github.com/npm/cli/issues/4828
       - name: Remove package-lock.json
         run: rm package-lock.json
-
+ 
       - name: Install dependencies
         run: npm install
-
-      # Modified test command to use npx
-      - name: Run tests
-        run: npx vitest run
-
+ 
+      - name: Run jest tests
+        run: npm test
+ 
       - name: Run eslint
         run: npm run lint
-
+ 
       - name: Build
         run: npx vite build --base=/carshop/
-
-      # Site creation with ready-made actions:
+ 
+      # Sivuston luonti valmiilla actioneilla:
       - name: Setup Pages
         uses: actions/configure-pages@v4
       - name: Upload artifact
@@ -52,3 +53,4 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+ 
