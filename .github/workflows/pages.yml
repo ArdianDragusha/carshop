@@ -27,11 +27,11 @@ jobs:
           cache: 'npm'
 
       # Remove lockfile to fix issue https://github.com/npm/cli/issues/4828
-      - name: Remove package-lock.json
-        run: rm package-lock.json
-
-      - name: Install dependencies
-        run: npm install
+      - name: Clean install dependencies
+        run: |
+          rm -rf node_modules
+          rm -f package-lock.json
+          npm install
 
       # Install vitest explicitly
       - name: Install vitest
